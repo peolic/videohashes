@@ -5,18 +5,12 @@ package main
 
 import (
 	"fmt"
-	"image"
-	"image/color"
-	"math"
 	"os"
 	"strconv"
 
-	"github.com/corona10/goimagehash"
-	"github.com/disintegration/imaging"
-
-	"github.com/stashapp/stash/internal/manager"
 	"github.com/stashapp/stash/pkg/ffmpeg"
 	"github.com/stashapp/stash/pkg/hash/oshash"
+	"github.com/stashapp/stash/pkg/hash/videophash"
 )
 
 func getFFPaths() (string, string) {
@@ -30,65 +24,14 @@ func getFFPaths() (string, string) {
 	return ffmpeg.GetPaths(paths)
 }
 
-func GeneratePHashValue(encoder ffmpeg.Encoder, videoFile ffmpeg.VideoFile) (*uint64, error) {
-	g, err := manager.NewPhashGenerator(videoFile, "")
-	if err != nil {
-		return nil, err
-	}
-
-	// fmt.Printf("[generator] generating phash sprite for %s", g.Info.VideoFile.Path)
-
-	// Generate sprite image offset by 5% on each end to avoid intro/outros
-	chunkCount := g.Columns * g.Rows
-	offset := 0.05 * g.Info.VideoFile.Duration
-	stepSize := (0.9 * g.Info.VideoFile.Duration) / float64(chunkCount)
-	var images []image.Image
-	for i := 0; i < chunkCount; i++ {
-		time := offset + (float64(i) * stepSize)
-
-		options := ffmpeg.SpriteScreenshotOptions{
-			Time:  time,
-			Width: 160,
-		}
-		img, err := encoder.SpriteScreenshot(g.Info.VideoFile, options)
-		if err != nil {
-			return nil, err
-		}
-		images = append(images, img)
-	}
-
-	// Combine all of the thumbnails into a sprite image
-	if len(images) == 0 {
-		return nil, fmt.Errorf("images slice is empty, failed to generate phash sprite for %s", g.Info.VideoFile.Path)
-	}
-	width := images[0].Bounds().Size().X
-	height := images[0].Bounds().Size().Y
-	canvasWidth := width * g.Columns
-	canvasHeight := height * g.Rows
-	montage := imaging.New(canvasWidth, canvasHeight, color.NRGBA{})
-	for index := 0; index < len(images); index++ {
-		x := width * (index % g.Columns)
-		y := height * int(math.Floor(float64(index)/float64(g.Rows)))
-		img := images[index]
-		montage = imaging.Paste(montage, img, image.Pt(x, y))
-	}
-
-	hash, err := goimagehash.PerceptionHash(montage)
-	if err != nil {
-		return nil, err
-	}
-	hashValue := hash.GetHash()
-	return &hashValue, nil
-}
-
 func GeneratePHash(ffmpegPath string, ffprobePath string, videoPath string) (string, int) {
-	FFMPEG := ffmpeg.Encoder(ffmpegPath)
+	FFMPEG := ffmpeg.FFMpeg(ffmpegPath)
 	FFProbe := ffmpeg.FFProbe(ffprobePath)
 
 	hexval := ""
 	duration := 0
 
-	videoFile, err := FFProbe.NewVideoFile(videoPath, false)
+	videoFile, err := FFProbe.NewVideoFile(videoPath)
 	if err != nil {
 		fmt.Println(fmt.Errorf("error reading video file: %s", err.Error()))
 		return hexval, duration
@@ -96,7 +39,7 @@ func GeneratePHash(ffmpegPath string, ffprobePath string, videoPath string) (str
 
 	duration = int(videoFile.Duration)
 
-	hash, err := GeneratePHashValue(FFMPEG, *videoFile)
+	hash, err := videophash.Generate(FFMPEG, videoFile)
 	if err != nil {
 		fmt.Println(fmt.Errorf("error generating phash: %s", err.Error()))
 		return hexval, duration
