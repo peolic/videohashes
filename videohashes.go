@@ -87,7 +87,13 @@ func main() {
 	}
 
 	phash, duration := GeneratePHash(ffmpegPath, ffprobePath, videoPath)
+	if phash == "" {
+		return
+	}
 	oshash := GenerateOSHash(videoPath)
+	if oshash == "" {
+		return
+	}
 
 	fmt.Println()
 	fmt.Printf("Duration: %s (%d)\n", formatDuration(duration), duration)
