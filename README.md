@@ -21,9 +21,9 @@ OSHash:   3e98ab590428139c
 ## Build
 ```sh
 # Windows
-GOOS=windows GOARCH=amd64 EXTRA_LDFLAGS='-extldflags=-static -s -w' go build videohashes.go
+make windows
 # Linux
-GOOS=linux GOARCH=amd64 EXTRA_LDFLAGS='-extldflags=-static -s -w' go build videohashes.go -o videohashes-linux
+make linux
 # Mac OS
-GOOS=darwin GOARCH=amd64 EXTRA_LDFLAGS='-extldflags=-static -s -w' go build videohashes.go -o videohashes-macos
+make macos
 ```
