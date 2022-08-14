@@ -10,8 +10,8 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/sirupsen/logrus v1.8.1 h1:dJKuHgqk1NNQlqoA6BTlM1Wf9DOH3NBjQyu0h9+AZZE=
 github.com/sirupsen/logrus v1.8.1/go.mod h1:yWOB1SBYBC5VeMP7gHvWumXLIWorT60ONWic61uBYv0=
-github.com/stashapp/stash v0.14.1-0.20220506022306-9ca387470764 h1:7Awp2nOUSAc3AZSLycKFFDUpWb+Om7Ul08FX0jf3eGs=
-github.com/stashapp/stash v0.14.1-0.20220506022306-9ca387470764/go.mod h1:S4KR+OUYbv40M/DpfZsvaHDp/CAgajKa+dVyMYoht3k=
+github.com/stashapp/stash v0.16.2-0.20220726044218-cba0fddf6113 h1:b3xLoDfKvyix0UywhIuzsrHG5YiZAk71Olq878APmUA=
+github.com/stashapp/stash v0.16.2-0.20220726044218-cba0fddf6113/go.mod h1:YkFd/ByuNduRbzADlyxkTGsVfuUXWOG3wJhOb+r9vN0=
 github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXfy6kDkUVs=
 github.com/stretchr/testify v1.7.0 h1:nwc3DEeHmmLAfoZucVR881uASk0Mfjw8xYJ99tb5CcY=
 golang.org/x/image v0.0.0-20180708004352-c73c2afc3b81/go.mod h1:ux5Hcp/YLpHSI86hEcLt0YII63i6oz57MZXIpbrjZUs=
