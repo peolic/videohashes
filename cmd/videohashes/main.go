@@ -55,6 +55,10 @@ func main() {
 	}
 
 	ffmpegPath, ffprobePath := internal.GetFFPaths()
+	if ffmpegPath == "" || ffprobePath == "" {
+		fmt.Println("ffmpeg/ffprobe executables not found")
+		return
+	}
 	videoPath := args[0]
 
 	fileInfo, err := os.Stat(videoPath)
