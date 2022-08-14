@@ -5,21 +5,11 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/peolic/videohashes/internal"
 	"github.com/stashapp/stash/pkg/ffmpeg"
 	"github.com/stashapp/stash/pkg/hash/oshash"
 	"github.com/stashapp/stash/pkg/hash/videophash"
 )
-
-func getFFPaths() (string, string) {
-	var paths []string
-
-	cwd, err := os.Getwd()
-	if err == nil {
-		paths = append(paths, cwd)
-	}
-
-	return ffmpeg.GetPaths(paths)
-}
 
 func GeneratePHash(ffmpegPath string, ffprobePath string, videoPath string) (string, int) {
 	FFMPEG := ffmpeg.FFMpeg(ffmpegPath)
@@ -56,13 +46,6 @@ func GenerateOSHash(videoPath string) string {
 	return oshash
 }
 
-func formatDuration(duration int) string {
-	hours := duration / 3600
-	minutes := (duration % 3600) / 60
-	seconds := duration % 60
-	return fmt.Sprintf("%02d:%02d:%02d", hours, minutes, seconds)
-}
-
 func main() {
 	args := os.Args[1:]
 
@@ -71,7 +54,7 @@ func main() {
 		return
 	}
 
-	ffmpegPath, ffprobePath := getFFPaths()
+	ffmpegPath, ffprobePath := internal.GetFFPaths()
 	videoPath := args[0]
 
 	fileInfo, err := os.Stat(videoPath)
@@ -93,7 +76,7 @@ func main() {
 	}
 
 	fmt.Println()
-	fmt.Printf("Duration: %s (%d)\n", formatDuration(duration), duration)
+	fmt.Printf("Duration: %s (%d)\n", internal.FormatDuration(duration), duration)
 	fmt.Printf("PHash:    %s\n", phash)
 	fmt.Printf("OSHash:   %s\n", oshash)
 	fmt.Println()
