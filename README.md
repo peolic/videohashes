@@ -8,15 +8,33 @@ Generation uses the [stashapp/stash](https://github.com/stashapp/stash) implemen
 ## Usage
 ```
 $ ./videohashes.exe '/path/to/video file.mp4'
+
+Duration: 00:10:34 (634)
+PHash:    de83a3120f3eb2ac
+OSHash:   bd3a5dba480425b9
+
 ```
 
-**Example output:**
+### Calculate MD5 as well:
 ```
-Duration: 00:18:45 (1125)
-PHash:    82d42996f6eb09d5
-OSHash:   3e98ab590428139c
+$ ./videohashes.exe -md5 '/path/to/video file.mp4'
+
+Duration: 00:10:34 (634)
+PHash:    de83a3120f3eb2ac
+OSHash:   bd3a5dba480425b9
+MD5:      3b69ed4e44e73435665b51b7dd989d16
+
 ```
 
+### JSON Output:
+```
+$ ./videohashes.exe -json '/path/to/video file.mp4'
+{
+  "duration": 634,
+  "phash": "de83a3120f3eb2ac",
+  "oshash": "bd3a5dba480425b9",
+}
+```
 
 ## Build
 ```sh
