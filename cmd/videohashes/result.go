@@ -1,20 +1,23 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"strconv"
 
 	"github.com/peolic/videohashes/internal"
 	"github.com/stashapp/stash/pkg/ffmpeg"
+	"github.com/stashapp/stash/pkg/hash/md5"
 	"github.com/stashapp/stash/pkg/hash/oshash"
 	"github.com/stashapp/stash/pkg/hash/videophash"
 )
 
 type Result struct {
-	videoPath string
-	Duration  int
-	PHash     string
-	OSHash    string
+	videoPath string `json:"-"`
+	Duration  int    `json:"duration"`
+	PHash     string `json:"phash"`
+	OSHash    string `json:"oshash"`
+	MD5       string `json:"md5,omitempty"`
 }
 
 func (r *Result) GeneratePHash(ffmpegPath string, ffprobePath string) error {
@@ -47,10 +50,31 @@ func (r *Result) GenerateOSHash() error {
 	return nil
 }
 
+func (r *Result) GenerateMD5() error {
+	md5, err := md5.FromFilePath(r.videoPath)
+	if err != nil {
+		return fmt.Errorf("error generating md5: %s", err)
+	}
+
+	r.MD5 = md5
+	return nil
+}
+
 func (r Result) String() string {
 	buf := ""
 	buf += fmt.Sprintf("Duration: %s (%d)\n", internal.FormatDuration(r.Duration), r.Duration)
 	buf += fmt.Sprintf("PHash:    %s\n", r.PHash)
 	buf += fmt.Sprintf("OSHash:   %s\n", r.OSHash)
+	if r.MD5 != "" {
+		buf += fmt.Sprintf("MD5:      %s\n", r.MD5)
+	}
 	return buf
+}
+
+func (r Result) JSON() (string, error) {
+	out, err := json.MarshalIndent(r, "", "  ")
+	if err != nil {
+		return "", err
+	}
+	return string(out), nil
 }
