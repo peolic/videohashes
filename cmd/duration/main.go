@@ -33,7 +33,6 @@ func main() {
 
 	duration := internal.GetDuration(ffprobePath, videoPath)
 
-	fmt.Println()
-	fmt.Printf("Duration: %s (%d)\n", internal.FormatDuration(duration), duration)
-	fmt.Println()
+	out := fmt.Sprintf("Duration: %s (%d)\n", internal.FormatDuration(duration), duration)
+	fmt.Printf("\n%s\n", out)
 }
