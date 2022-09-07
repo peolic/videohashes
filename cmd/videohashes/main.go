@@ -47,26 +47,26 @@ func GenerateOSHash(videoPath string) string {
 }
 
 func main() {
-	args := os.Args[1:]
+	videoPath := ""
 
-	if len(args) != 1 {
-		fmt.Println("arg 1: video path")
+	args := os.Args[1:]
+	if len(args) >= 1 {
+		videoPath = args[0]
+	}
+
+	if videoPath == "" {
+		fmt.Println("missing video path")
+		return
+	}
+
+	if err := internal.ValidFile(videoPath); err != nil {
+		fmt.Println(err)
 		return
 	}
 
 	ffmpegPath, ffprobePath := internal.GetFFPaths()
 	if ffmpegPath == "" || ffprobePath == "" {
 		fmt.Println("ffmpeg/ffprobe executables not found")
-		return
-	}
-	videoPath := args[0]
-
-	fileInfo, err := os.Stat(videoPath)
-	if err != nil {
-		fmt.Println(fmt.Errorf("stat error: %s", err.Error()))
-		return
-	} else if fileInfo.Mode().IsDir() {
-		fmt.Println("file is a directory")
 		return
 	}
 

@@ -7,6 +7,16 @@ import (
 	"github.com/stashapp/stash/pkg/ffmpeg"
 )
 
+func ValidFile(filePath string) error {
+	fileInfo, err := os.Stat(filePath)
+	if err != nil {
+		return fmt.Errorf("stat error: %s", err.Error())
+	} else if fileInfo.Mode().IsDir() {
+		return fmt.Errorf("file is a directory")
+	}
+	return nil
+}
+
 func GetFFPaths() (string, string) {
 	var paths []string
 
