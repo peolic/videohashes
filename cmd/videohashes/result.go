@@ -24,9 +24,14 @@ func (r *Result) GeneratePHash(ffmpegPath string, ffprobePath string) error {
 	FFMPEG := ffmpeg.FFMpeg(ffmpegPath)
 	FFProbe := ffmpeg.FFProbe(ffprobePath)
 
-	videoFile, err := FFProbe.NewVideoFile(r.videoPath)
+	videoProbe, err := FFProbe.NewVideoFile(r.videoPath)
 	if err != nil {
 		return fmt.Errorf("error reading video file: %s", err.Error())
+	}
+
+	videoFile, err := internal.ProbeResultToVideoFile(videoProbe, r.videoPath)
+	if err != nil {
+		return fmt.Errorf("error coverting probe result: %s", err.Error())
 	}
 
 	r.Duration = int(videoFile.Duration)
