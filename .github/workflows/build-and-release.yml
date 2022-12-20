@@ -37,6 +37,7 @@ jobs:
           ldflags: -extldflags=-static -s -w
           project_path: ./cmd/${{ matrix.project }}
           asset_name: ${{ matrix.project }}-${{ matrix.goos }}-${{ matrix.goarch }}
+          compress_assets: OFF
           overwrite: true
-          md5sum: true
-          sha256sum: true
+          md5sum: false
+          sha256sum: false
