@@ -39,9 +39,9 @@ $ ./videohashes.exe -json '/path/to/video file.mp4'
 ## Build
 ```sh
 # Windows
-make windows
+make windows-amd64
 # Linux
-make linux
+make linux-amd64
 # Mac OS
-make macos
+make macos-amd64
 ```
