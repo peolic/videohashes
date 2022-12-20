@@ -2,7 +2,6 @@ name: Build and release
 
 on:
   workflow_dispatch:
-  on:
   release:
     types: [created]
 
@@ -30,14 +29,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: wangyoucao577/go-release-action@v1.34
-          with:
-            github_token: ${{ secrets.GITHUB_TOKEN }}
-            goos: ${{ matrix.goos }}
-            goarch: ${{ matrix.goarch }}
-            goversion: latest
-            ldflags: -extldflags=-static -s -w
-            project_path: ./cmd/${{ matrix.project }}
-            asset_name: ${{ matrix.project }}-${{ matrix.goos }}-${{ matrix.goarch }}
-            overwrite: true
-            md5sum: true
-            sha256sum: true
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          goos: ${{ matrix.goos }}
+          goarch: ${{ matrix.goarch }}
+          goversion: latest
+          ldflags: -extldflags=-static -s -w
+          project_path: ./cmd/${{ matrix.project }}
+          asset_name: ${{ matrix.project }}-${{ matrix.goos }}-${{ matrix.goarch }}
+          overwrite: true
+          md5sum: true
+          sha256sum: true
