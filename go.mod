@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/corona10/goimagehash v1.0.3
-	github.com/stashapp/stash v0.17.3-0.20221122012418-8b59a3b01418
+	github.com/stashapp/stash v0.18.0
 )
 
 require (
