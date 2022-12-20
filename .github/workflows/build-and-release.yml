@@ -1,0 +1,43 @@
+name: Build and release
+
+on:
+  workflow_dispatch:
+  on:
+  release:
+    types: [created]
+
+jobs:
+  releases-matrix:
+    name: Release Go Binaries
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project:
+          - videohashes
+          - duration
+          - phashcompare
+        goos:
+          - windows
+          - linux
+          - darwin
+        goarch:
+          - amd64
+          # - arm64
+          # - arm
+        exclude:
+          - goos: darwin
+            goarch: arm
+    steps:
+      - uses: actions/checkout@v3
+      - uses: wangyoucao577/go-release-action@v1.34
+          with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            goos: ${{ matrix.goos }}
+            goarch: ${{ matrix.goarch }}
+            goversion: latest
+            ldflags: -extldflags=-static -s -w
+            project_path: ./cmd/${{ matrix.project }}
+            asset_name: ${{ matrix.project }}-${{ matrix.goos }}-${{ matrix.goarch }}
+            overwrite: true
+            md5sum: true
+            sha256sum: true
