@@ -3,7 +3,7 @@ module github.com/peolic/videohashes
 go 1.18
 
 require (
-	github.com/corona10/goimagehash v1.0.3
+	github.com/corona10/goimagehash v1.1.0
 	github.com/stashapp/stash v0.18.0
 )
 
