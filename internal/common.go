@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"context"
 	"fmt"
 	"os"
 
@@ -18,16 +19,39 @@ func ValidFile(filePath string) error {
 	return nil
 }
 
-func GetFFPaths() (string, string) {
-	var paths []string
+func GetFFPaths(targetDir string) (string, string) {
+	var paths = []string{targetDir}
 
 	cwd, err := os.Getwd()
 	if err == nil {
 		paths = append(paths, cwd)
 	}
-
-	return ffmpeg.GetPaths(paths)
+    return GetFFMPEG(targetDir, paths)
 }
+
+func GetFFMPEG(targetDir string, paths []string) (string, string) {
+	if (targetDir != "") {
+		var ctx = context.Background()
+		fullpaths := append([]string{targetDir}, paths...)
+
+		ffmpegPath, ffprobePath := ffmpeg.GetPaths(fullpaths)
+
+		if ffmpegPath == "" || ffprobePath == "" {
+			if err := ffmpeg.Download(ctx, targetDir); err != nil {
+				msg := `Unable to locate / automatically download FFMPEG
+Check the readme for download links.
+The FFMPEG and FFProbe binaries should be placed in %s
+The error was: %s
+`
+				fmt.Printf(msg, targetDir, err)
+				return "", ""
+			}
+		}
+		return ffmpeg.GetPaths(fullpaths)
+	}
+	return "",""
+}
+
 
 func GetDuration(ffprobePath string, videoPath string) int {
 	FFProbe := ffmpeg.FFProbe(ffprobePath)
