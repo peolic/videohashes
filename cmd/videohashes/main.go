@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/peolic/videohashes/internal"
 )
@@ -17,12 +18,29 @@ func main() {
 	videoPath := ""
 	calcMD5 := false
 	jsonOut := false
+	ffmpegInstallDir := "./"
+
+	path, err := os.Executable()
+	if (err == nil) {
+		ffmpegInstallDir = filepath.Dir(path)
+	}
+	path, err = filepath.Abs(ffmpegInstallDir)
+	if (err == nil) {
+		ffmpegInstallDir = path
+	}
 
 	flag.StringVar(&videoPath, "video", "", "path to video file")
 	flag.BoolVar(&calcMD5, "md5", false, "calculate md5 checksum as well")
 	flag.BoolVar(&jsonOut, "json", false, "output in json format")
+	flag.StringVar(&ffmpegInstallDir, "ffmpeg", ffmpegInstallDir, "where to install ffmpeg if needed")
 	flag.Usage = myUsage
 	flag.Parse()
+
+	ffmpegPath, ffprobePath := internal.GetFFPaths(ffmpegInstallDir)
+	if ffmpegPath == "" || ffprobePath == "" {
+		fmt.Println("acceptable ffmpeg/ffprobe executables not found on path, and could not be installed")
+		return
+	}
 
 	if videoPath == "" {
 		videoPath = flag.Arg(0)
@@ -36,12 +54,6 @@ func main() {
 
 	if err := internal.ValidFile(videoPath); err != nil {
 		fmt.Println(err)
-		return
-	}
-
-	ffmpegPath, ffprobePath := internal.GetFFPaths()
-	if ffmpegPath == "" || ffprobePath == "" {
-		fmt.Println("ffmpeg/ffprobe executables not found")
 		return
 	}
 
