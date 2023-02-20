@@ -12,8 +12,8 @@ github.com/remeh/sizedwaitgroup v1.0.0 h1:VNGGFwNo/R5+MJBf6yrsr110p0m4/OX4S3DCy7
 github.com/remeh/sizedwaitgroup v1.0.0/go.mod h1:3j2R4OIe/SeS6YDhICBy22RWjJC5eNCJ1V+9+NVNYlo=
 github.com/sirupsen/logrus v1.8.1 h1:dJKuHgqk1NNQlqoA6BTlM1Wf9DOH3NBjQyu0h9+AZZE=
 github.com/sirupsen/logrus v1.8.1/go.mod h1:yWOB1SBYBC5VeMP7gHvWumXLIWorT60ONWic61uBYv0=
-github.com/stashapp/stash v0.18.0 h1:Na9yuiclrvHydkAuFMH2en59znSdCilndtXq0eYWgNI=
-github.com/stashapp/stash v0.18.0/go.mod h1:/IBgG8WgU0Y96Tgb6RFn+RWLIxuEYjt53/hWPel72KM=
+github.com/stashapp/stash v0.19.0 h1:ls0IKSS2MQLyK0t4uSpk49q0mcb1nSfdgezZBcxmlSM=
+github.com/stashapp/stash v0.19.0/go.mod h1:/IBgG8WgU0Y96Tgb6RFn+RWLIxuEYjt53/hWPel72KM=
 github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXfy6kDkUVs=
 github.com/stretchr/testify v1.7.0 h1:nwc3DEeHmmLAfoZucVR881uASk0Mfjw8xYJ99tb5CcY=
 golang.org/x/image v0.0.0-20180708004352-c73c2afc3b81/go.mod h1:ux5Hcp/YLpHSI86hEcLt0YII63i6oz57MZXIpbrjZUs=
