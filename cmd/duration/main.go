@@ -7,7 +7,7 @@ import (
 	"github.com/peolic/videohashes/internal"
 )
 
-func main() {
+func run() int {
 	videoPath := ""
 
 	args := os.Args[1:]
@@ -17,22 +17,27 @@ func main() {
 
 	if videoPath == "" {
 		fmt.Println("missing video path")
-		return
+		return 1
 	}
 
 	if err := internal.ValidFile(videoPath); err != nil {
 		fmt.Println(err)
-		return
+		return 1
 	}
 
 	_, ffprobePath := internal.GetFFPaths()
 	if ffprobePath == "" {
 		fmt.Println("ffprobe executable not found")
-		return
+		return 1
 	}
 
 	duration := internal.GetDuration(ffprobePath, videoPath)
 
 	out := fmt.Sprintf("Duration: %s (%d)\n", internal.FormatDuration(duration), duration)
 	fmt.Printf("\n%s\n", out)
+	return 0
+}
+
+func main() {
+	os.Exit(run())
 }

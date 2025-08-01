@@ -25,13 +25,13 @@ func CompareHashes(hash1 string, hash2 string) (int, error) {
 	return imageHash.Distance(otherHash)
 }
 
-func main() {
+func run() int {
 	args := os.Args[1:]
 
 	if len(args) != 2 {
 		fmt.Println("arg 1: phash 1")
 		fmt.Println("arg 2: phash 2")
-		return
+		return 1
 	}
 
 	hash1 := args[0]
@@ -40,7 +40,7 @@ func main() {
 	distance, err := CompareHashes(hash1, hash2)
 	if err != nil {
 		fmt.Println(err)
-		return
+		return 1
 	}
 
 	fmt.Println()
@@ -48,4 +48,9 @@ func main() {
 	fmt.Printf("PHash 1:  %s\n", hash1)
 	fmt.Printf("PHash 2:  %s\n", hash2)
 	fmt.Println()
+	return 0
+}
+
+func main() {
+	os.Exit(run())
 }

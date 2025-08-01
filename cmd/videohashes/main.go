@@ -13,7 +13,7 @@ func myUsage() {
 	flag.PrintDefaults()
 }
 
-func main() {
+func run() int {
 	videoPath := ""
 	calcMD5 := false
 	jsonOut := false
@@ -31,36 +31,36 @@ func main() {
 	if videoPath == "" {
 		fmt.Println("missing video path")
 		flag.Usage()
-		return
+		return 1
 	}
 
 	if err := internal.ValidFile(videoPath); err != nil {
 		fmt.Println(err)
-		return
+		return 1
 	}
 
 	ffmpegPath, ffprobePath := internal.GetFFPaths()
 	if ffmpegPath == "" || ffprobePath == "" {
 		fmt.Println("ffmpeg/ffprobe executables not found")
-		return
+		return 1
 	}
 
 	result := Result{videoPath: videoPath}
 
 	if err := result.GeneratePHash(ffmpegPath, ffprobePath); err != nil {
 		fmt.Println(err)
-		return
+		return 1
 	}
 
 	if err := result.GenerateOSHash(); err != nil {
 		fmt.Println(err)
-		return
+		return 1
 	}
 
 	if calcMD5 {
 		if err := result.GenerateMD5(); err != nil {
 			fmt.Println(err)
-			return
+			return 1
 		}
 	}
 
@@ -68,11 +68,16 @@ func main() {
 		out, err := result.JSON()
 		if err != nil {
 			fmt.Println(err)
-			return
+			return 1
 		}
 		fmt.Println(out)
-		return
+		return 1
 	}
 
 	fmt.Printf("\n%s\n", result)
+	return 0
+}
+
+func main() {
+	os.Exit(run())
 }
