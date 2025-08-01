@@ -8,6 +8,7 @@ on:
 jobs:
   releases-matrix:
     name: Release Go Binaries
+    if: github.ref_type == 'tag'
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -27,13 +28,13 @@ jobs:
           - goos: darwin
             goarch: arm
     steps:
-      - uses: actions/checkout@v3
-      - uses: wangyoucao577/go-release-action@v1.34
+      - uses: actions/checkout@v4
+      - uses: wangyoucao577/go-release-action@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           goos: ${{ matrix.goos }}
           goarch: ${{ matrix.goarch }}
-          goversion: latest
+          goversion: ./go.mod
           ldflags: -extldflags=-static -s -w
           project_path: ./cmd/${{ matrix.project }}
           asset_name: ${{ matrix.project }}-${{ matrix.goos }}-${{ matrix.goarch }}
@@ -41,3 +42,45 @@ jobs:
           overwrite: true
           md5sum: false
           sha256sum: false
+
+  release-content:
+    name: Release Content
+    needs: releases-matrix
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set release content
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          REPO_PREFIX=https://github.com/${{ github.repository }}
+          RELEASE_TAG=${{ github.ref_name }}
+
+          gh release edit $RELEASE_TAG --notes-file - << EOF
+          <table>
+          <thead>
+            <tr>
+              <th>Windows (amd64)</th>
+              <th>Linux (amd64)</th>
+              <th>Mac OS X (amd64)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="$REPO_PREFIX/releases/download/$RELEASE_TAG/videohashes-windows-amd64.exe">📥 videohashes</a></td>
+              <td><a href="$REPO_PREFIX/releases/download/$RELEASE_TAG/videohashes-linux-amd64">📥 videohashes</a></td>
+              <td><a href="$REPO_PREFIX/releases/download/$RELEASE_TAG/videohashes-darwin-amd64">📥 videohashes</a></td>
+            </tr>
+            <tr>
+              <td><a href="$REPO_PREFIX/releases/download/$RELEASE_TAG/phashcompare-windows-amd64.exe">📥 phashcompare</a></td>
+              <td><a href="$REPO_PREFIX/releases/download/$RELEASE_TAG/phashcompare-linux-amd64">📥 phashcompare</a></td>
+              <td><a href="$REPO_PREFIX/releases/download/$RELEASE_TAG/phashcompare-darwin-amd64">📥 phashcompare</a></td>
+            </tr>
+            <tr>
+              <td><a href="$REPO_PREFIX/releases/download/$RELEASE_TAG/duration-windows-amd64.exe">📥 duration</a></td>
+              <td><a href="$REPO_PREFIX/releases/download/$RELEASE_TAG/duration-linux-amd64">📥 duration</a></td>
+              <td><a href="$REPO_PREFIX/releases/download/$RELEASE_TAG/duration-darwin-amd64">📥 duration</a></td>
+            </tr>
+          </tbody>
+          </table>
+          EOF
