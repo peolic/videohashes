@@ -3,6 +3,8 @@
 A small tool that generates Stash and StashBox compatible PHash and OSHash hashes.  
 Generation uses the [stashapp/stash](https://github.com/stashapp/stash) implementation.
 
+Running the tool requires [ffmpeg + ffprobe](https://ffmpeg.org/download.html).
+
 ## [Download latest from releases](https://github.com/peolic/videohashes/releases/latest)
 
 ## Usage
