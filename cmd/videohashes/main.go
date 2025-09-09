@@ -71,7 +71,7 @@ func run() int {
 			return 1
 		}
 		fmt.Println(out)
-		return 1
+		return 0
 	}
 
 	fmt.Printf("\n%s\n", result)
