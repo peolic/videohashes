@@ -3,9 +3,10 @@ package internal
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/stashapp/stash/pkg/ffmpeg"
-	"github.com/stashapp/stash/pkg/file"
+	"github.com/stashapp/stash/pkg/models"
 )
 
 func ValidFile(filePath string) error {
@@ -19,18 +20,27 @@ func ValidFile(filePath string) error {
 }
 
 func GetFFPaths() (string, string) {
-	var paths []string
+	var ffmpegPath, ffprobePath string
+
+	ex, err := os.Executable()
+	if err != nil {
+		panic(err)
+	}
+	exPath := filepath.Dir(ex)
 
 	cwd, err := os.Getwd()
-	if err == nil {
-		paths = append(paths, cwd)
+	if err != nil {
+		panic(err)
 	}
 
-	return ffmpeg.GetPaths(paths)
+	ffmpegPath = ffmpeg.ResolveFFMpeg(exPath, cwd)
+	ffprobePath = ffmpeg.ResolveFFProbe(exPath, cwd)
+
+	return ffmpegPath, ffprobePath
 }
 
 func GetDuration(ffprobePath string, videoPath string) int {
-	FFProbe := ffmpeg.FFProbe(ffprobePath)
+	FFProbe := ffmpeg.NewFFProbe(ffprobePath)
 
 	videoProbe, err := FFProbe.NewVideoFile(videoPath)
 	if err != nil {
@@ -49,14 +59,14 @@ func FormatDuration(duration int) string {
 }
 
 // Based on https://github.com/stashapp/stash/blob/8b59a3b01418/pkg/file/video/scan.go#L17
-func ProbeResultToVideoFile(videoProbe *ffmpeg.VideoFile, videoPath string) (*file.VideoFile, error) {
+func ProbeResultToVideoFile(videoProbe *ffmpeg.VideoFile, videoPath string) (*models.VideoFile, error) {
 	container, err := ffmpeg.MatchContainer(videoProbe.Container, videoPath)
 	if err != nil {
 		return nil, fmt.Errorf("matching container for %q: %w", videoPath, err)
 	}
 
-	videoFile := &file.VideoFile{
-		BaseFile: &file.BaseFile{
+	videoFile := &models.VideoFile{
+		BaseFile: &models.BaseFile{
 			Path: videoPath,
 		},
 		Format:      string(container),

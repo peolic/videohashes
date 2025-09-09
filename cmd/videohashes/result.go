@@ -21,8 +21,8 @@ type Result struct {
 }
 
 func (r *Result) GeneratePHash(ffmpegPath string, ffprobePath string) error {
-	FFMPEG := ffmpeg.FFMpeg(ffmpegPath)
-	FFProbe := ffmpeg.FFProbe(ffprobePath)
+	FFMPEG := ffmpeg.NewEncoder(ffmpegPath)
+	FFProbe := ffmpeg.NewFFProbe(ffprobePath)
 
 	videoProbe, err := FFProbe.NewVideoFile(r.videoPath)
 	if err != nil {
